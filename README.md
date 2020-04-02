@@ -1,5 +1,7 @@
 # Go Snippets
 
+![CI](https://github.com/foxygoat/s/workflows/ci/badge.svg?branch=master)
+
 Copy these independent snippets or import them as micro packages.
 
 ### Development
