@@ -24,7 +24,7 @@ cover: test  ## Show test coverage in your browser
 clean::
 	rm -f $(COVERFILE)
 
-CHECK_COVERAGE = awk -F '[ \t%]+' '/^total:/ && $$3 < $(COVERAGE) {exit 1}'
+CHECK_COVERAGE = awk -F '[ \t%]+' '/^total:/ {print; if ($$3 < $(COVERAGE)) exit 1}'
 FAIL_COVERAGE = { echo '$(COLOUR_RED)FAIL - Coverage below $(COVERAGE)%$(COLOUR_NORMAL)'; exit 1; }
 
 .PHONY: test check-coverage cover
