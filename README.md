@@ -1,6 +1,7 @@
 # Go Snippets
 
 ![CI](https://github.com/foxygoat/s/workflows/ci/badge.svg?branch=master)
+[![Godoc](https://img.shields.io/badge/godoc-ref-blue)](https://pkg.go.dev/foxygo.at/s)
 
 Copy these independent snippets or import them as micro packages.
 
