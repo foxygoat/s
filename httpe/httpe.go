@@ -1,4 +1,4 @@
-// Package httpe holds http server utilities
+// Package httpe provides http server utilities.
 package httpe
 
 import (

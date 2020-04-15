@@ -1,4 +1,4 @@
-// Package mock holds mocking utilities used in tests
+// Package mock provides mocking utilities used in tests.
 package mock
 
 import (
