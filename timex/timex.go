@@ -5,6 +5,7 @@
 package timex
 
 import (
+	"context"
 	"time"
 )
 
@@ -67,4 +68,17 @@ func (t *Ticker) Stop() {
 	default:
 		close(t.done)
 	}
+}
+
+// NewTickerWithContext creates a Ticker that stops when the context is
+// cancelled.
+func NewTickerWithContext(ctx context.Context, d time.Duration) *Ticker {
+	t := NewTicker(d)
+	if ctx.Done() != nil {
+		go func() {
+			<-ctx.Done()
+			t.Stop()
+		}()
+	}
+	return t
 }
