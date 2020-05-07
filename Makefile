@@ -6,8 +6,7 @@ clean::  ## Remove generated files
 
 .PHONY: all clean
 
-
-# -- Test ---------------------------------------------------------------------
+# --- Test ---
 
 COVERFILE = coverage.out
 COVERAGE = 100
@@ -29,10 +28,9 @@ FAIL_COVERAGE = { echo '$(COLOUR_RED)FAIL - Coverage below $(COVERAGE)%$(COLOUR_
 
 .PHONY: test check-coverage cover
 
+# --- Lint ---
 
-# -- Lint ---------------------------------------------------------------------
-
-GOLINT_VERSION = 1.24.0
+GOLINT_VERSION = 1.26.0
 GOLINT_INSTALLED_VERSION = $(or $(word 4,$(shell golangci-lint --version 2>/dev/null)),0.0.0)
 GOLINT_MIN_VERSION = $(shell printf '%s\n' $(GOLINT_VERSION) $(GOLINT_INSTALLED_VERSION) | sort -V | head -n 1)
 
@@ -48,8 +46,7 @@ lint-with-docker:
 
 .PHONY: lint
 
-
-# --- Utilities ---------------------------------------------------------------
+# --- Utilities ---
 
 COLOUR_NORMAL = $(shell tput sgr0 2>/dev/null)
 COLOUR_RED    = $(shell tput setaf 1 2>/dev/null)

@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/foxygoat/s/workflows/ci/badge.svg?branch=master)
 [![Godoc](https://img.shields.io/badge/godoc-ref-blue)](https://pkg.go.dev/foxygo.at/s)
-[![Slack chat](https://img.shields.io/badge/slack-gophers-795679?logo=slack)](https://app.slack.com/client/T029RQSE6/C011LKH21HC)
+[![Slack chat](https://img.shields.io/badge/slack-gophers-795679?logo=slack)](https://gophers.slack.com/messages/foxygoat)
 
 Copy these independent snippets or import them as micro packages.
 
