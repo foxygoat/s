@@ -10,8 +10,8 @@ import (
 )
 
 func ExampleNewTicker() {
-	ticker := timex.NewTicker(2 * time.Millisecond)
-	time.AfterFunc(5*time.Millisecond, ticker.Stop)
+	ticker := timex.NewTicker(20 * time.Millisecond)
+	time.AfterFunc(50*time.Millisecond, ticker.Stop)
 	cnt := 0
 	for range ticker.C {
 		cnt++
