@@ -44,7 +44,7 @@ endif
 lint-with-docker:
 	docker run --rm -v $(PWD):/src -w /src golangci/golangci-lint:v$(GOLINT_VERSION) golangci-lint run
 
-.PHONY: lint
+.PHONY: lint lint-with-docker
 
 # --- Utilities ---
 
