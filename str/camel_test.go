@@ -37,3 +37,24 @@ func TestCameSplit(t *testing.T) {
 		})
 	}
 }
+
+func TestToCamelCase(t *testing.T) {
+	testCases := map[string]struct {
+		in   string
+		want string
+	}{
+		"empty":   {in: "", want: ""},
+		"single":  {in: "X", want: "x"},
+		"double":  {in: "XX", want: "xx"},
+		"camel":   {in: "camelCase", want: "camelCase"},
+		"pascal":  {in: "PascalCase", want: "pascalCase"},
+		"acronym": {in: "HTTPServer", want: "httpServer"},
+	}
+	for name, tc := range testCases {
+		tc := tc
+		t.Run(name, func(t *testing.T) {
+			got := ToCamelCase(tc.in)
+			require.Equal(t, tc.want, got)
+		})
+	}
+}

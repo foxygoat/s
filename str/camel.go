@@ -2,6 +2,7 @@
 package str
 
 import (
+	"strings"
 	"unicode"
 	"unicode/utf8"
 )
@@ -81,4 +82,18 @@ func addWord(words []string, runes []rune) []string {
 		words = append(words, string(runes))
 	}
 	return words
+}
+
+// ToCamelCase converts a string to lower camel case (as used for unexported Go
+// indentifiers), converting the entire first word to lowercase. The word
+// boundaries are located as per CamelSplit. For example, "HelloWorld" becomes
+// "helloWorld", "HTTPDir" becomes "httpDir". If the string contains invalid
+// utf-8, the result is undefined.
+func ToCamelCase(s string) string {
+	splits := CamelSplit(s)
+	if len(splits) == 0 {
+		return ""
+	}
+	splits[0] = strings.ToLower(splits[0])
+	return strings.Join(splits, "")
 }
