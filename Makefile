@@ -1,35 +1,46 @@
-all: test check-coverage lint  ## test, check coverage and lint
+# --- Global -------------------------------------------------------------------
+O = out
+
+all: build test cover lint  ## test, check coverage and lint
 	@if [ -e .git/rebase-merge ]; then git --no-pager log -1 --pretty='%h %s'; fi
 	@echo '$(COLOUR_GREEN)Success$(COLOUR_NORMAL)'
 
 clean::  ## Remove generated files
+	-rm -rf $O
 
 .PHONY: all clean
 
-# --- Test ---
+# --- Build --------------------------------------------------------------------
+# Build all subdirs of ./cmd, excluding those with a leading underscore.
+CMDDIRS = $(filter-out ./cmd/_%,$(wildcard ./cmd/*))
 
-COVERFILE = coverage.out
+build: | $O  ## Build binaries of directories in ./cmd to out/
+	go build -o $O $(CMDDIRS)
+
+install:  ## Build and install binaries in $GOBIN or $GOPATH/bin
+	go install $(CMDDIRS)
+
+.PHONY: build install
+
+# --- Test ---------------------------------------------------------------------
+COVERFILE = out/coverage.txt
 COVERAGE = 100
 
-test:  ## Run tests and generate a coverage file
+test: | $O  ## Run tests and generate a coverage file
 	go test -coverprofile=$(COVERFILE) ./...
 
-check-coverage: test  ## Check that test coverage meets the required level
+cover: test  ## Check that test coverage meets the required level
 	@go tool cover -func=$(COVERFILE) | $(CHECK_COVERAGE) || $(FAIL_COVERAGE)
 
-cover: test  ## Show test coverage in your browser
+showcover: test  ## Show test coverage in your browser
 	go tool cover -html=$(COVERFILE)
-
-clean::
-	rm -f $(COVERFILE)
 
 CHECK_COVERAGE = awk -F '[ \t%]+' '/^total:/ {print; if ($$3 < $(COVERAGE)) exit 1}'
 FAIL_COVERAGE = { echo '$(COLOUR_RED)FAIL - Coverage below $(COVERAGE)%$(COLOUR_NORMAL)'; exit 1; }
 
-.PHONY: test check-coverage cover
+.PHONY: test cover showcover
 
-# --- Lint ---
-
+# --- Lint ---------------------------------------------------------------------
 GOLINT_VERSION = 1.26.0
 GOLINT_INSTALLED_VERSION = $(or $(word 4,$(shell golangci-lint --version 2>/dev/null)),0.0.0)
 GOLINT_MIN_VERSION = $(shell printf '%s\n' $(GOLINT_VERSION) $(GOLINT_INSTALLED_VERSION) | sort -V | head -n 1)
@@ -46,8 +57,7 @@ lint-with-docker:
 
 .PHONY: lint lint-with-docker
 
-# --- Utilities ---
-
+# --- Utilities ----------------------------------------------------------------
 COLOUR_NORMAL = $(shell tput sgr0 2>/dev/null)
 COLOUR_RED    = $(shell tput setaf 1 2>/dev/null)
 COLOUR_GREEN  = $(shell tput setaf 2 2>/dev/null)
@@ -55,5 +65,8 @@ COLOUR_WHITE  = $(shell tput setaf 7 2>/dev/null)
 
 help:
 	@awk -F ':.*## ' 'NF == 2 && $$1 ~ /^[A-Za-z0-9_-]+$$/ { printf "$(COLOUR_WHITE)%-30s$(COLOUR_NORMAL)%s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
+
+$O:
+	@mkdir -p $@
 
 .PHONY: help
