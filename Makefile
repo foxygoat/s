@@ -26,8 +26,9 @@ install:  ## Build and install binaries in $GOBIN or $GOPATH/bin
 COVERFILE = out/coverage.txt
 COVERAGE = 100
 
-test: | $O  ## Run tests and generate a coverage file
+test: build | $O  ## Run tests and generate a coverage file
 	go test -coverprofile=$(COVERFILE) ./...
+	./cmd/timeout/test.sh
 
 cover: test  ## Check that test coverage meets the required level
 	@go tool cover -func=$(COVERFILE) | $(CHECK_COVERAGE) || $(FAIL_COVERAGE)
