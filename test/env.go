@@ -34,7 +34,7 @@ type Environ map[string]*string
 //         defer test.Env.Restore()
 //         ... test, test, test ...
 //     }
-var Env Environ
+var Env = Environ{}
 
 // Set sets key to value in the OS environment, saving the previous value and
 // presence. It returns the receiver so calls can easily be chained.

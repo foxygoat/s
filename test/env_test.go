@@ -81,3 +81,17 @@ func TestUnsetMissing(t *testing.T) {
 	_, ok = os.LookupEnv("FOO")
 	require.False(t, ok, "env var found in environment: FOO")
 }
+
+func TestGlobalEnv(t *testing.T) {
+	err := os.Unsetenv("FOO")
+	require.NoError(t, err)
+
+	Env.Set("FOO", "BAR")
+	val, ok := os.LookupEnv("FOO")
+	require.True(t, ok, "env var not found in environment: FOO")
+	require.Equal(t, "BAR", val)
+
+	Env.Restore()
+	_, ok = os.LookupEnv("FOO")
+	require.False(t, ok, "env var found in environment: FOO")
+}
