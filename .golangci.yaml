@@ -3,22 +3,30 @@ issues:
 linters:
   disable-all: true
   enable:
+    - asciicheck
     - bodyclose
     - deadcode
     - depguard
     - dogsled
     - dupl
     - errcheck
+    - exhaustive
+    - exportloopref
     - funlen
+    - gci
     - gochecknoinits
     - gocognit
     - goconst
     - gocritic
     - gocyclo
+    - godot
     - godox
     - gofmt
+    - gofumpt
+    - goheader
     - goimports
     - golint
+    - gomodguard
     - goprintffuncname
     - gosec
     - gosimple
@@ -29,9 +37,13 @@ linters:
     - maligned
     - misspell
     - nakedret
+    - nestif
+    - noctx
+    - nolintlint
     - prealloc
     - rowserrcheck
     - scopelint
+    - sqlclosecheck
     - staticcheck
     - structcheck
     - stylecheck
@@ -41,4 +53,4 @@ linters:
     - unused
     - varcheck
     - whitespace
-# disabled: gomnd wsl gochecknoglobals
+# disabled: goerr113 gomnd nlreturn wsl gochecknoglobals

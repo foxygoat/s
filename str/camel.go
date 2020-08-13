@@ -39,7 +39,7 @@ const (
 //   "Two  spaces"         → ["Two", "  ", "spaces"]
 //   "BadUTF8\xe2\xe2\xa1" → ["BadUTF8\xe2\xe2\xa1"]
 //
-// This code is inspired by https://github.com/fatih/camelcase (MIT licensed)
+// This code is inspired by https://github.com/fatih/camelcase (MIT licensed).
 func CamelSplit(s string) []string {
 	if !utf8.ValidString(s) {
 		return []string{s}

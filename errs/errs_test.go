@@ -20,9 +20,11 @@ func TestErrorfIs(t *testing.T) {
 	require.False(t, errors.Is(err, err3))
 }
 
-type errType1 string
-type errType2 string
-type errType3 string
+type (
+	errType1 string
+	errType2 string
+	errType3 string
+)
 
 func (e errType1) Error() string { return string(e) }
 func (e errType2) Error() string { return string(e) }

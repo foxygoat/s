@@ -20,7 +20,7 @@ type responseWriter struct {
 }
 
 // Err sets the error value returned by the Write method.
-// Chain it with construction: mock.ResponseWriter().Err(someErr)
+// Chain it with construction: mock.ResponseWriter().Err(someErr).
 func (r *responseWriter) Err(err error) *responseWriter {
 	r.err = err
 	return r
