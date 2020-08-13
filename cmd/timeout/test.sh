@@ -24,7 +24,7 @@ main() {
   run_test 0 2 "${binary}" 1s sh -c 'exit 2'
 
   # Test: Command with slash that exists
-  run_test 0 0 "${binary}" 1s /bin/true
+  run_test 0 0 "${binary}" 1s /bin/sh -c 'exit 0'
 
   # Test: Command with slash that does not exist
   run_test 0 1 "${binary}" 1s /bin/non-existent
