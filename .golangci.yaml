@@ -33,7 +33,6 @@ linters:
     - govet
     - ineffassign
     - interfacer
-    - lll
     - maligned
     - misspell
     - nakedret
@@ -53,4 +52,4 @@ linters:
     - unused
     - varcheck
     - whitespace
-# disabled: goerr113 gomnd nlreturn wsl gochecknoglobals
+# disabled: goerr113 gomnd lll nlreturn wsl gochecknoglobals
