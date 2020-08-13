@@ -59,6 +59,20 @@ func NewHandlerFunc(h HandlerFuncE, ew ErrWriterFunc) http.HandlerFunc { //nolin
 	return NewHandler(h, ew).(http.HandlerFunc)
 }
 
+// NewSafeHandler creates a new http.HandlerFunc which calls
+// HandlerE.ServeHTTP and if it returns an error calls WriteHTTPeErr
+// to create the appropriate response.
+func NewSafeHandler(h HandlerE) http.Handler {
+	return NewHandler(h, ErrWriterFunc(WriteSafeErr))
+}
+
+// NewSafeHandlerFunc creates a new http.HandlerFunc which calls
+// HandlerFuncE and if it returns an error calls WriteHTTPeErr to
+// create the appropriate response.
+func NewSafeHandlerFunc(h HandlerFuncE) http.HandlerFunc { //nolint:interfacer
+	return NewSafeHandler(h).(http.HandlerFunc)
+}
+
 // Chain returns a HandlerE which executes each of the HandlerFuncE
 // parameters sequentially stopping at the first one that returns an
 // error, and returning that error, or nil if none return an error.
