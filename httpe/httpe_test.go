@@ -42,6 +42,24 @@ func TestHandlerFunc(t *testing.T) {
 	require.Equal(t, errNoPost.Error(), w.LastBody)
 }
 
+func TestSafeHandler(t *testing.T) {
+	he := &handlerE{}
+	h := NewSafeHandler(he)
+	r := &http.Request{Method: http.MethodGet}
+	w := mock.ResponseWriter()
+	h.ServeHTTP(w, r)
+	require.Equal(t, http.StatusInternalServerError, w.LastStatus)
+}
+
+func TestSafeHandlerFunc(t *testing.T) {
+	he := handlerE{}
+	h := NewSafeHandlerFunc(he.ServeHTTPe)
+	r := &http.Request{Method: http.MethodGet}
+	w := mock.ResponseWriter()
+	h.ServeHTTP(w, r)
+	require.Equal(t, http.StatusInternalServerError, w.LastStatus)
+}
+
 func TestChain(t *testing.T) {
 	count := 0
 	errHand := fmt.Errorf("error 🤚")
