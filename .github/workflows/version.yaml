@@ -16,3 +16,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
         DEFAULT_BUMP: patch
+    # Get the latest module version so pkg.go.dev updates
+    - uses: actions/setup-go@v2.1.1
+      with:
+        go-version: 1.14
+    - name: Update pkg.go.dev
+      env:
+        GO111MODULE: on
+      working-directory: /tmp
+      run: go get foxygo.at/s@latest
