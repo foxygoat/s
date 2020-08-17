@@ -11,6 +11,7 @@ jobs:
       with:
         fetch-depth: '0'
     - name: Bump version and push tag
+      id: bump_version
       uses: anothrNick/github-tag-action@1.23.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -24,4 +25,4 @@ jobs:
       env:
         GO111MODULE: on
       working-directory: /tmp
-      run: go get foxygo.at/s@latest
+      run: go get foxygo.at/s@${{ steps.bump_version.outputs.tag }}
