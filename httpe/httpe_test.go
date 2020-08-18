@@ -26,38 +26,38 @@ func (*handlerE) WriteErr(w http.ResponseWriter, err error) {
 
 func TestHandler(t *testing.T) {
 	he := &handlerE{}
-	h := NewHandler(he, he)
+	h := NewHandler(he)
 	r := &http.Request{Method: http.MethodGet}
 	w := mock.ResponseWriter()
 	h.ServeHTTP(w, r)
-	require.Equal(t, errNoPost.Error(), w.LastBody)
+	require.Equal(t, http.StatusInternalServerError, w.LastStatus)
 }
 
 func TestHandlerFunc(t *testing.T) {
 	he := handlerE{}
-	h := NewHandlerFunc(he.ServeHTTPe, he.WriteErr)
+	h := NewHandlerFunc(he.ServeHTTPe)
+	r := &http.Request{Method: http.MethodGet}
+	w := mock.ResponseWriter()
+	h.ServeHTTP(w, r)
+	require.Equal(t, http.StatusInternalServerError, w.LastStatus)
+}
+
+func TestHandlerWithErrWriter(t *testing.T) {
+	he := &handlerE{}
+	h := NewHandler(he, WithErrWriter(he))
 	r := &http.Request{Method: http.MethodGet}
 	w := mock.ResponseWriter()
 	h.ServeHTTP(w, r)
 	require.Equal(t, errNoPost.Error(), w.LastBody)
 }
 
-func TestSafeHandler(t *testing.T) {
-	he := &handlerE{}
-	h := NewSafeHandler(he)
-	r := &http.Request{Method: http.MethodGet}
-	w := mock.ResponseWriter()
-	h.ServeHTTP(w, r)
-	require.Equal(t, http.StatusInternalServerError, w.LastStatus)
-}
-
-func TestSafeHandlerFunc(t *testing.T) {
+func TestHandlerFuncWithErrWriter(t *testing.T) {
 	he := handlerE{}
-	h := NewSafeHandlerFunc(he.ServeHTTPe)
+	h := NewHandlerFunc(he.ServeHTTPe, WithErrWriterFunc(he.WriteErr))
 	r := &http.Request{Method: http.MethodGet}
 	w := mock.ResponseWriter()
 	h.ServeHTTP(w, r)
-	require.Equal(t, http.StatusInternalServerError, w.LastStatus)
+	require.Equal(t, errNoPost.Error(), w.LastBody)
 }
 
 func TestChain(t *testing.T) {

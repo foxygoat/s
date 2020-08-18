@@ -23,6 +23,21 @@ var (
 	storage      = map[string]User{}
 )
 
+func ExampleHandlerFuncE() {
+	// Create a http.HandlerFunc from our httpe.HandlerFuncE function and
+	// an httpe.ErrWriterFunc function.
+	handler := httpe.NewHandlerFunc(handle, httpe.WithErrWriterFunc(writeErr))
+
+	// In this example, we call the handler directly using httptest.
+	// Normally you would start a http server.
+	// http.ListenAndServe(":9090", handler)
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest("POST", "/user", strings.NewReader(`{"Name": "truncated...`))
+	handler(w, r)
+	fmt.Printf("%d %s", w.Code, w.Body.String())
+	// output: 400 input error
+}
+
 func handle(w http.ResponseWriter, r *http.Request) error {
 	user := User{}
 	body, _ := ioutil.ReadAll(r.Body)
@@ -48,15 +63,4 @@ func writeErr(w http.ResponseWriter, err error) {
 	default:
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 	}
-}
-
-func ExampleHandlerFuncE() {
-	handler := httpe.NewHandlerFunc(handle, writeErr)
-	// http.ListenAndServe(":9090", handler)
-
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest("POST", "/user", strings.NewReader(`{"Name": "truncated...`))
-	handler(w, r)
-	fmt.Printf("%d %s", w.Code, w.Body.String())
-	// output: 400 input error
 }
