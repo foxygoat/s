@@ -23,6 +23,7 @@
 package httpe
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -59,6 +60,66 @@ type ErrWriterFunc func(http.ResponseWriter, error)
 // StatusCode and Body and writes it.
 func (ew ErrWriterFunc) WriteErr(w http.ResponseWriter, err error) {
 	ew(w, err)
+}
+
+// New returns a http.Handler that calls in sequence all the args that are a
+// type of handler stopping if any return an error. If any of the args is an
+// ErrWriter or a function that has the signature of an ErrWriterFunc, it will
+// be called to handle the error if there was one.
+//
+// The types that are recognised as handlers in the arg list are any type that
+// implements HandlerE (including HandlerFuncE), a function that matches the
+// signature of a HandlerFuncE, a http.Handler or a function that matches the
+// signature of a http.HandlerFunc. Args of the latter two are adapted to
+// always return a nil error.
+//
+// If an argument does not match any of the preceding types or more than one
+// ErrWriter is passed, an error is returned.
+func New(args ...interface{}) (http.Handler, error) {
+	handlers := make([]HandlerE, 0, len(args))
+	opts := []option{}
+
+	for i, arg := range args {
+		switch v := arg.(type) {
+		case HandlerE:
+			handlers = append(handlers, v)
+		case func(http.ResponseWriter, *http.Request) error:
+			handlers = append(handlers, HandlerFuncE(v))
+		case http.Handler:
+			handlers = append(handlers, handlerAdapter(v))
+		case func(http.ResponseWriter, *http.Request):
+			handlers = append(handlers, handlerAdapter(http.HandlerFunc(v)))
+		case ErrWriter:
+			opts = append(opts, WithErrWriter(v))
+		case func(http.ResponseWriter, error):
+			opts = append(opts, WithErrWriterFunc(v))
+		default:
+			return nil, fmt.Errorf("arg %d: unknown arg type: %T", i, v)
+		}
+		if len(opts) > 1 {
+			return nil, fmt.Errorf("arg %d: too many ErrWriters", i)
+		}
+	}
+	return NewHandler(Chain(handlers...), opts...), nil
+}
+
+// Must passes all its args to New() and panics if New() returns an error. If
+// it does not, the handler result of New() is returned.
+func Must(args ...interface{}) http.Handler {
+	h, err := New(args...)
+	if err != nil {
+		panic(err)
+	}
+	return h
+}
+
+// handlerAdapter turns an http.Handler into a HandlerE that returns nil.
+func handlerAdapter(h http.Handler) HandlerE {
+	f := func(w http.ResponseWriter, r *http.Request) error {
+		h.ServeHTTP(w, r)
+		return nil
+	}
+	return HandlerFuncE(f)
 }
 
 // NewHandler returns an http.Handler that calls h.ServeHTTPe and handles the
