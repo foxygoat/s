@@ -1,3 +1,16 @@
+// Command retry re-runs a command a number of times until it succeeds.
+//
+//   Usage: retry <count> <command> [args...]
+//
+// retry will run <command> with [args...]. If it exits with a non-zero code,
+// it will be re-run up to <count> times. <count> may not be negative.
+//
+// The exit code of retry is the exit code of the last execution of <command>
+// or 1 if retry exits with its own error.
+//
+// <command> is executed directly with [args...] as provided. If <command> does
+// not contain any path separators, the search path is used to locate it. No
+// shell is used to run <command>.
 package main
 
 import (
@@ -18,7 +31,7 @@ func main() {
 
 func retry(args []string) (int, error) {
 	if len(args) < 2 {
-		return 1, errors.New("usage: retry <count> command [args...]")
+		return 1, errors.New("usage: retry <count> <command> [args...]")
 	}
 	i, err := strconv.Atoi(args[0])
 	if err != nil {

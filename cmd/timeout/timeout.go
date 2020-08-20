@@ -1,3 +1,21 @@
+// Command timeout runs a command, stopping it after a duration.
+//
+//   Usage: timeout [-s signal] [-g grace] <duration> <command> [args...]
+//
+// Timeout runs <command> with [args...] signalling it with <signal> (default
+// SIGTERM) after the given <duration>. If the process has not exited by the
+// time the <grace> period passes (default 3s), the process is killed.
+//
+// The exit code of timeout is <command>'s exit code if it exited on its own.
+// If the command could not be run or the timeout expires, the exit code of
+// timeout is 1.
+//
+// <duration> and <grace> are parsed as time.Duration strings (see
+// https://golang.org/pkg/time/#ParseDuration).
+//
+// <command> is executed directly with [args...] as provided. If <command> does
+// not contain any path separators, the search path is used to locate it. No
+// shell is used to run <command>.
 package main
 
 import (
@@ -27,7 +45,7 @@ func main() {
 
 func timeout(args []string) (int, error) {
 	if len(args) < 2 {
-		return 1, errors.New("usage: timeout <duration> command [args...]")
+		return 1, errors.New("usage: timeout [-s signal] [-g grace] <duration> <command> [args...]")
 	}
 	d, err := time.ParseDuration(args[0])
 	if err != nil {
