@@ -17,6 +17,18 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
         DEFAULT_BUMP: patch
+    # Create a release for frontpage visibility and downloading the tar
+    - name: Get commit message
+      run: git log --format=%B -n 1 HEAD > /tmp/commit-msg
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.bump_version.outputs.tag }}
+        release_name: Release ${{ steps.bump_version.outputs.tag }}
+        body_path: /tmp/commit-msg
     # Get the latest module version so pkg.go.dev updates
     - uses: actions/setup-go@v2.1.1
       with:
