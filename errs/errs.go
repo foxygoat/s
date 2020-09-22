@@ -1,8 +1,8 @@
 // Package errs provides error wrapping functions that allow an error to
-// wrap multiple other errors. The error wrapping in the Go standard
-// library allows an error to wrap only one error with only one %w
+// wrap multiple errors. The error wrapping in the Go standard library
+// errors package allows an error to wrap only one error with one %w
 // format verb in the format string passed to fmt.Errorf and the
-// errors.Unwrap() function that returns only a single error.
+// errors.Unwrap() function that returns a single error.
 //
 // The error type returned by the functions in this package wraps
 // multiple errors so that errors.Is() and errors.As() can be used to
@@ -10,8 +10,8 @@
 // on errors of that type always returns nil as that function cannot
 // return multiple errors.
 //
-// The error type is not exported so is used through the standard Go
-// error interfaces.
+// The error type is not exported so can only used through the standard
+// Go error interfaces.
 package errs
 
 import (
