@@ -6,7 +6,7 @@ all: build test check-coverage lint  ## build, test, check coverage and lint
 	@echo '$(COLOUR_GREEN)Success$(COLOUR_NORMAL)'
 
 clean::  ## Remove generated files
-	-rm -rf $O
+	-rm -rf $(O)
 
 .PHONY: all clean
 
@@ -14,8 +14,8 @@ clean::  ## Remove generated files
 # Build all subdirs of ./cmd, excluding those with a leading underscore.
 CMDDIRS = $(filter-out ./cmd/_%,$(wildcard ./cmd/*))
 
-build: | $O  ## Build binaries of directories in ./cmd to out/
-	go build -o $O $(CMDDIRS)
+build: | $(O)  ## Build binaries of directories in ./cmd to out/
+	go build -o $(O) $(CMDDIRS)
 
 install:  ## Build and install binaries in $GOBIN or $GOPATH/bin
 	go install $(CMDDIRS)
@@ -23,10 +23,10 @@ install:  ## Build and install binaries in $GOBIN or $GOPATH/bin
 .PHONY: build install
 
 # --- Test ---------------------------------------------------------------------
-COVERFILE = out/coverage.txt
+COVERFILE = $(O)/coverage.txt
 COVERAGE = 100
 
-test: build | $O  ## Run tests and generate a coverage file
+test: build | $(O)  ## Run tests and generate a coverage file
 	go test -coverprofile=$(COVERFILE) ./...
 	./cmd/timeout/test.sh
 
@@ -39,7 +39,7 @@ cover: test  ## Show test coverage in your browser
 CHECK_COVERAGE = awk -F '[ \t%]+' '/^total:/ {print; if ($$3 < $(COVERAGE)) exit 1}'
 FAIL_COVERAGE = { echo '$(COLOUR_RED)FAIL - Coverage below $(COVERAGE)%$(COLOUR_NORMAL)'; exit 1; }
 
-.PHONY: check-coverage cover showcover test
+.PHONY: check-coverage cover test
 
 # --- Lint ---------------------------------------------------------------------
 GOLINT_VERSION = 1.30.0
@@ -73,7 +73,7 @@ COLOUR_WHITE  = $(shell tput setaf 7 2>/dev/null)
 help:
 	@awk -F ':.*## ' 'NF == 2 && $$1 ~ /^[A-Za-z0-9_-]+$$/ { printf "$(COLOUR_WHITE)%-30s$(COLOUR_NORMAL)%s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
 
-$O:
+$(O):
 	@mkdir -p $@
 
 .PHONY: help
