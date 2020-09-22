@@ -3,23 +3,40 @@ package httpe
 import "net/http"
 
 var (
-	// Get returns a ErrMethodNotAllowed if request method is not a GET. Use with Chain.
+	// Get is a HandlerE that returns a ErrMethodNotAllowed if the request
+	// method is not GET. Use with Chain or New/Must.
 	Get = newMethodChecker(http.MethodGet)
-	// Head returns a ErrMethodNotAllowed if request method is not a HEAD. Use with Chain.
+
+	// Head is a HandlerE that returns a ErrMethodNotAllowed if the request
+	// method is not HEAD. Use with Chain or New/Must.
 	Head = newMethodChecker(http.MethodHead)
-	// Post returns a ErrMethodNotAllowed if request method is not a Post. Use with Chain.
+
+	// Post is a HandlerE that returns a ErrMethodNotAllowed if the request
+	// method is not POST. Use with Chain or New/Must.
 	Post = newMethodChecker(http.MethodPost)
-	// Put returns a ErrMethodNotAllowed if request method is not a Put. Use with Chain.
+
+	// Put is a HandlerE that returns a ErrMethodNotAllowed if the request
+	// method is not PUT. Use with Chain or New/Must.
 	Put = newMethodChecker(http.MethodPut)
-	// Patch returns a ErrMethodNotAllowed if request method is not a Patch. Use with Chain.
+
+	// Patch is a HandlerE that returns a ErrMethodNotAllowed if the
+	// request method is not PATCH. Use with Chain or New/Must.
 	Patch = newMethodChecker(http.MethodPatch)
-	// Delete returns a ErrMethodNotAllowed if request method is not a Delete. Use with Chain.
+
+	// Delete is a HandlerE that returns a ErrMethodNotAllowed if the
+	// request method is not DELETE. Use with Chain or New/Must.
 	Delete = newMethodChecker(http.MethodDelete)
-	// Connect returns a ErrMethodNotAllowed if request method is not a Connect. Use with Chain.
+
+	// Connect is a HandlerE that returns a ErrMethodNotAllowed if the
+	// request method is not CONNECT. Use with Chain or New/Must.
 	Connect = newMethodChecker(http.MethodConnect)
-	// Options returns a ErrMethodNotAllowed if request method is not a Options. Use with Chain.
+
+	// Options is a HandlerE that returns a ErrMethodNotAllowed if the
+	// request method is not OPTIONS. Use with Chain or New/Must.
 	Options = newMethodChecker(http.MethodOptions)
-	// Trace returns a ErrMethodNotAllowed if request method is not a Trace. Use with Chain.
+
+	// Trace is a HandlerE that returns a ErrMethodNotAllowed if the
+	// request method is not TRACE. Use with Chain or New/Must.
 	Trace = newMethodChecker(http.MethodTrace)
 )
 

@@ -13,8 +13,7 @@ type StatusError int
 // Error returns the error message and implements the error interface.
 func (err StatusError) Error() string { return http.StatusText(int(err)) }
 
-// IsClientError returns true if the error is in 4xx range. Useful for
-// error message printing and hiding details.
+// IsClientError returns true if the error is in range 400 to 499.
 func (err StatusError) IsClientError() bool { return int(err) >= 400 && int(err) <= 499 }
 
 // Code returns a status int representing an http.Status* value.
@@ -66,9 +65,19 @@ var (
 	ErrNetworkAuthenticationRequired = StatusError(http.StatusNetworkAuthenticationRequired)
 )
 
-// WriteSafeErr writes the http status represented by err to the ResponseWriter and
-// prints the error message for 4xx errors, but keeps details for 5xx errors.
-// It writes 5xx errors "safely" by it doesn't leak any error details.
+// WriteSafeErr writes err as an HTTP error to the http.ResponseWriter.
+//
+// If err wraps a StatusError, WriteSafeErr writes the Code of that error as
+// the HTTP status code. Otherwise writes 500 as the code (internal server
+// error).
+//
+// WriteSafeErr writes the HTTP response body as the error described as a
+// string if the error wraps a StatusError and the Code for that error is a
+// client error (code 400 to 499). Otherwise, only the text for the status code
+// is written. Errors that do not wrap a StatusError are treated as
+// ErrInternalServerError. This prevents leaking internal details from a server
+// error into the response to the client, but allows adding information to a
+// client error to inform the client of details of that error.
 func WriteSafeErr(w http.ResponseWriter, err error) {
 	if err == nil {
 		return

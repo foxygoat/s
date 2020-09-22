@@ -1,9 +1,10 @@
 // Package httpe provides a model of HTTP handler that returns errors.
 //
-// net/http provides a Handler interface that requires the handler to write
-// errors to the provided ResponseWriter. This is different to the usual Go way
-// of handling errors that has functions returning errors, and it makes normal
-// http.Handlers a bit cumbersome.
+// The standard Go library package net/http provides a Handler interface that
+// requires the handler write errors to the provided ResponseWriter. This is
+// different to the usual Go way of handling errors that has functions
+// returning errors, and it makes normal http.Handlers a bit cumbersome and
+// repetitive in the error handling cases.
 //
 // This package provides a HandlerE interface with a ServeHTTPe method that has
 // the same signature as http.Handler.ServeHTTP except it also returns an
@@ -62,15 +63,15 @@ func (ew ErrWriterFunc) WriteErr(w http.ResponseWriter, err error) {
 	ew(w, err)
 }
 
-// New returns a http.Handler that calls in sequence all the args that are a
-// type of handler stopping if any return an error. If any of the args is an
+// New returns an http.Handler that calls in sequence all the args that are a
+// type of handler, stopping if any return an error. If any of the args is an
 // ErrWriter or a function that has the signature of an ErrWriterFunc, it will
 // be called to handle the error if there was one.
 //
 // The types that are recognised as handlers in the arg list are any type that
 // implements HandlerE (including HandlerFuncE), a function that matches the
-// signature of a HandlerFuncE, a http.Handler or a function that matches the
-// signature of a http.HandlerFunc. Args of the latter two are adapted to
+// signature of a HandlerFuncE, an http.Handler, or a function that matches the
+// signature of an http.HandlerFunc. Args of the latter two are adapted to
 // always return a nil error.
 //
 // If an argument does not match any of the preceding types or more than one
@@ -176,9 +177,9 @@ func WithErrWriterFunc(f ErrWriterFunc) option { //nolint:golint // Do not want 
 	}
 }
 
-// Chain returns a HandlerE which executes each of the HandlerFuncE
-// parameters sequentially stopping at the first one that returns an
-// error, and returning that error, or nil if none return an error.
+// Chain returns a HandlerE that executes each of the HandlerFuncE parameters
+// sequentially, stopping at the first one that returns an error and returning
+// that error. It returns nil if none of the handlers return an error.
 func Chain(he ...HandlerE) HandlerE {
 	f := func(w http.ResponseWriter, r *http.Request) error {
 		for _, h := range he {
