@@ -30,7 +30,7 @@ jobs:
         release_name: Release ${{ steps.bump_version.outputs.tag }}
         body_path: /tmp/commit-msg
     # Get the latest module version so pkg.go.dev updates
-    - uses: actions/setup-go@v2.1.2
+    - uses: actions/setup-go@v2
       with:
         go-version: 1.14
     - name: Update pkg.go.dev
