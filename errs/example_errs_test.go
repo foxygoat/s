@@ -9,7 +9,7 @@ import (
 )
 
 func ExampleErrorf() {
-	errInternal := errors.New("internal error")
+	const errInternal = errs.Const("internal error")
 	err := errs.Errorf("%v, caused by: %v", errInternal, io.ErrUnexpectedEOF)
 
 	fmt.Println(err)
@@ -21,7 +21,7 @@ func ExampleErrorf() {
 }
 
 func ExampleNew() {
-	errInternal := errors.New("internal error")
+	const errInternal = errs.Const("internal error")
 	err := errs.New(errInternal, io.ErrUnexpectedEOF)
 
 	fmt.Println(err)
@@ -33,7 +33,7 @@ func ExampleNew() {
 }
 
 func ExampleNoWrap() {
-	errInternal := errors.New("internal error")
+	const errInternal = errs.Const("internal error")
 	err := errs.Errorf("%v, caused by: %v", errInternal, errs.NoWrap(io.ErrUnexpectedEOF))
 
 	fmt.Println(err)
